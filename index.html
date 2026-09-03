@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="azure">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tideline - Intelligent Oceanic Experience & Authentication</title>
+  <meta name="description" content="Tideline is an advanced, calming oceanic authentication portal featuring hydrodynamic wave physics, procedural tidal soundscapes, and fluid interactions." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Glossy Vertical Left Side Controls Dock with 3-Dot Toggle -->
+    <aside class="glossy-dock" id="glossy-dock" role="toolbar" aria-label="Ocean Atmospheric Controls">
+      
+      <!-- 3-Dot Toggle Trigger Button -->
+      <button class="dock-toggle-btn" id="dock-toggle-btn" title="Toggle Ocean Atmosphere Controls" aria-label="Toggle Ocean Controls">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </button>
+
+      <!-- Vertical Dock Menu Items -->
+      <div class="dock-content" id="dock-content">
+        <div class="dock-separator"></div>
+
+        <!-- Atmospheric Themes (Vertical) -->
+        <div class="dock-group">
+          <button class="dock-btn theme-btn active" data-theme="azure" aria-label="Azure Midday">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <span class="dock-tooltip">Azure Midday</span>
+          </button>
+          <button class="dock-btn theme-btn" data-theme="sunset" aria-label="Sunset Horizon">
+            <svg viewBox="0 0 24 24"><path d="M17 18a5 5 0 0 0-10 0M12 2v7M4.22 10.22l1.42 1.42M1 18h22M18.36 11.64l1.42-1.42M23 22H1"/></svg>
+            <span class="dock-tooltip">Sunset Horizon</span>
+          </button>
+          <button class="dock-btn theme-btn" data-theme="bioluminescent" aria-label="Bioluminescent Midnight">
+            <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <span class="dock-tooltip">Midnight Glow</span>
+          </button>
+          <button class="dock-btn theme-btn" data-theme="dawn" aria-label="Dawn Breeze">
+            <svg viewBox="0 0 24 24"><path d="M12 2v6M4.93 10.93l4.24 4.24M2 18h20M20 18a8 8 0 0 0-16 0"/></svg>
+            <span class="dock-tooltip">Dawn Breeze</span>
+          </button>
+        </div>
+
+        <div class="dock-separator"></div>
+
+        <!-- Procedural Tidal Sound Toggle -->
+        <div class="dock-group" style="position: relative;">
+          <button class="dock-btn" id="btn-sound" title="Toggle procedural ocean surf (Click for audio, right-click for volume)" aria-label="Ocean Surf Audio">
+            <div class="audio-waves" aria-hidden="true">
+              <span class="audio-bar"></span>
+              <span class="audio-bar"></span>
+              <span class="audio-bar"></span>
+            </div>
+            <span class="dock-tooltip">Surf Audio</span>
+          </button>
+
+          <!-- Volume Flyout Popover -->
+          <div class="volume-popover vertical-flyout" id="volume-popover">
+            <svg style="width: 14px; height: 14px; fill: currentColor;" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.45" aria-label="Ocean surf volume" />
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Hydrodynamic Interactive Canvas -->
+    <canvas id="wc" aria-hidden="true"></canvas>
+
+    <!-- Main Authentication Glass Card -->
+    <main class="card-wrapper">
+      <div class="card">
+        
+        <!-- Header & Brand -->
+        <div class="brand">
+          <div class="brand-main">
+            <div class="brand-mark">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10c0-5.52-4.48-10-10-10zm0 18c-4.41 0-8-3.59-8-8 0-2.38 1.05-4.52 2.72-6l5.28 9.15V9.32l4.8 8.31c-1.39.86-3.03 1.37-4.8 1.37z"/>
+              </svg>
+            </div>
+            <span class="brand-name">Tideline</span>
+          </div>
+
+          <!-- Sleek Interactive Quick Demo Button -->
+          <button type="button" class="demo-chip" id="btn-quick-demo" title="Explore live ocean conditions">
+            <span class="demo-chip-pulse"></span>
+            <span>Live Demo</span>
+          </button>
+        </div>
+
+        <div class="view-container">
+
+          <!-- 1. SIGN IN VIEW -->
+          <div class="auth-view active" id="view-signin">
+            <h1 class="title">Welcome back</h1>
+            <p class="subtitle">Sign in to your account to continue</p>
+
+            <form id="form-signin">
+              <div class="field">
+                <label for="signin-email">Email address</label>
+                <div class="input-wrap">
+                  <input type="email" id="signin-email" placeholder="you@example.com" required autocomplete="email" />
+                  <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="signin-password">Password</label>
+                <div class="input-wrap">
+                  <input type="password" id="signin-password" placeholder="••••••••" required autocomplete="current-password" />
+                  <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                  <button type="button" class="toggle-pwd-btn" data-target="signin-password" aria-label="Toggle password visibility">
+                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="remember">
+                  <input type="checkbox" checked />
+                  <span>Remember me</span>
+                </label>
+                <button type="button" class="forgot" data-switch-view="forgot">Forgot password?</button>
+              </div>
+
+              <button type="submit" class="btn-primary" id="btn-submit-signin">
+                <span>Sign in</span>
+              </button>
+            </form>
+
+            <div class="divider">
+              <div class="div-line"></div>
+              <span class="div-text">or continue with</span>
+              <div class="div-line"></div>
+            </div>
+
+            <!-- Sleek Full-Width Google Button -->
+            <button class="btn-google" type="button" id="btn-google-login">
+              <svg viewBox="0 0 18 18">
+                <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
+                <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/>
+                <path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
+                <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/>
+              </svg>
+              <span>Sign in with Google</span>
+            </button>
+
+            <p class="signup-row">
+              Don't have an account? <button type="button" data-switch-view="signup">Create one</button>
+            </p>
+          </div>
+
+          <!-- 2. CREATE ACCOUNT VIEW -->
+          <div class="auth-view" id="view-signup">
+            <h1 class="title">Join the voyage</h1>
+            <p class="subtitle">Set sail with real-time ocean intelligence</p>
+
+            <form id="form-signup">
+              <div class="field">
+                <label for="signup-name">Full Name</label>
+                <div class="input-wrap">
+                  <input type="text" id="signup-name" placeholder="Captain Marina Cruz" required autocomplete="name" />
+                  <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="signup-email">Email address</label>
+                <div class="input-wrap">
+                  <input type="email" id="signup-email" placeholder="you@example.com" required autocomplete="email" />
+                  <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="signup-password">Choose password</label>
+                <div class="input-wrap">
+                  <input type="password" id="signup-password" placeholder="Create strong passphrase" required autocomplete="new-password" />
+                  <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                  <button type="button" class="toggle-pwd-btn" data-target="signup-password" aria-label="Toggle password visibility">
+                    <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                  </button>
+                </div>
+
+                <!-- Tidal Password Strength Gauge -->
+                <div class="pwd-gauge-wrap" aria-live="polite">
+                  <div class="gauge-header">
+                    <span class="gauge-label">Tidal Security</span>
+                    <span class="gauge-level" id="gauge-level-text">Calm (Empty)</span>
+                  </div>
+                  <div class="gauge-track">
+                    <div class="gauge-fill" id="gauge-fill"></div>
+                  </div>
+                  <div class="gauge-criteria">
+                    <span class="crit-item" id="crit-len">8+ chars</span>
+                    <span class="crit-item" id="crit-num">Number</span>
+                    <span class="crit-item" id="crit-upper">Mixed case</span>
+                    <span class="crit-item" id="crit-spec">Symbol</span>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary" id="btn-submit-signup">
+                <span>Create Sailor Account</span>
+              </button>
+            </form>
+
+            <div class="divider">
+              <div class="div-line"></div>
+              <span class="div-text">or</span>
+              <div class="div-line"></div>
+            </div>
+
+            <p class="signup-row">
+              Already have an account? <button type="button" data-switch-view="signin">Sign in</button>
+            </p>
+          </div>
+
+          <!-- 3. FORGOT PASSWORD VIEW -->
+          <div class="auth-view" id="view-forgot">
+            <div class="recovery-badge">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2c-.55 0-1 .45-1 1v1.1c-2.83.48-5 2.94-5 5.9v4.58L4.29 16.3c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L7.41 16H16.6l1.71 1.71c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L18 14.58V10c0-2.96-2.17-5.42-5-5.9V3c0-.55-.45-1-1-1zm0 4c2.21 0 4 1.79 4 4v5H8v-5c0-2.21 1.79-4 4-4zm-1 14h2v2h-2z"/>
+              </svg>
+            </div>
+            <h1 class="title" style="text-align: center;">Lost at sea?</h1>
+            <p class="subtitle" style="text-align: center;">Enter your email to send a bottled recovery tide to your inbox.</p>
+
+            <form id="form-forgot">
+              <div class="field">
+                <label for="forgot-email">Account email</label>
+                <div class="input-wrap">
+                  <input type="email" id="forgot-email" placeholder="you@example.com" required />
+                  <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary" style="margin-top: 0.8rem;">
+                <span>Send bottled recovery</span>
+              </button>
+            </form>
+
+            <div class="divider">
+              <div class="div-line"></div>
+              <span class="div-text">or</span>
+              <div class="div-line"></div>
+            </div>
+
+            <p class="signup-row">
+              Remembered your harbor? <button type="button" data-switch-view="signin">Back to Sign in</button>
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Post-Login Live Ocean Dashboard Overlay -->
+    <div class="dashboard-overlay" id="dashboard-overlay" role="dialog" aria-modal="true" aria-label="Tideline Live Ocean Conditions">
+      <div class="dashboard-card">
+        <div class="dash-header">
+          <div class="dash-user-badge">
+            <div class="dash-avatar" id="dash-user-initial">A</div>
+            <div>
+              <h2 class="title" style="font-size: 20px; margin: 0;" id="dash-user-name">Alex Rivers</h2>
+              <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Pacific Coast Harbor • Connected</p>
+            </div>
+          </div>
+          <div class="demo-chip">
+            <span class="demo-chip-pulse"></span>
+            <span>Live Swell</span>
+          </div>
+        </div>
+
+        <!-- Metric Grid -->
+        <div class="dash-grid">
+          <div class="dash-stat-box">
+            <div class="stat-val">18:42</div>
+            <div class="stat-name">Next High Tide</div>
+          </div>
+          <div class="dash-stat-box">
+            <div class="stat-val">11.4s</div>
+            <div class="stat-name">Swell Period</div>
+          </div>
+          <div class="dash-stat-box">
+            <div class="stat-val">19.5°C</div>
+            <div class="stat-name">Water Temp</div>
+          </div>
+        </div>
+
+        <!-- Visual Tidal Curve Chart -->
+        <div class="tide-curve-container">
+          <div class="tide-curve-header">
+            <span>24-Hour Tidal Harmonic Cycle</span>
+            <span style="font-weight: 500; font-size: 11px; color: var(--accent-primary);">Spring Tide Phase</span>
+          </div>
+          <svg class="tide-svg-chart" viewBox="0 0 400 65" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="tideGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="var(--accent-primary)" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="var(--accent-primary)" stop-opacity="0.02"/>
+              </linearGradient>
+            </defs>
+            <path d="M 0,42 Q 60,10 120,38 T 240,38 T 360,32 L 400,40 L 400,65 L 0,65 Z" fill="url(#tideGrad)"/>
+            <path d="M 0,42 Q 60,10 120,38 T 240,38 T 360,32 L 400,40" fill="none" stroke="var(--accent-primary)" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="120" cy="38" r="4" fill="var(--accent-primary)"/>
+            <circle cx="240" cy="38" r="4" fill="var(--accent-primary)"/>
+          </svg>
+        </div>
+
+        <!-- Mindful Tidal Breathing Guide -->
+        <div class="breath-widget">
+          <div class="breath-orb-wrap">
+            <div class="breath-orb-outer"></div>
+            <div class="breath-orb-inner"></div>
+          </div>
+          <div class="breath-info">
+            <div class="breath-title">Tidal Breathing Rhythm</div>
+            <div class="breath-instruction">Inhale with incoming wave, exhale with receding tide.</div>
+          </div>
+        </div>
+
+        <button class="btn-signout" id="btn-signout">Return to Harbor (Sign Out)</button>
+      </div>
+    </div>
+
+    <!-- Toast message -->
+    <aside class="toast-msg" id="toast" role="status" aria-live="polite">
+      <span class="toast-dot"></span>
+      <span class="toast-text">Notification</span>
+    </aside>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="waves.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
